@@ -989,31 +989,39 @@ const ZoneScreen = ({ zoneId, apiBase, onExit }: { zoneId: string, apiBase: stri
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     const fetchData = useCallback(async () => {
-        try {
-            setErrorMsg(null);
-            const [zRes, sRes, spRes] = await Promise.all([
-                fetch(`${apiBase}/data`),
-                fetch(`${apiBase}/data/${zoneId}/sm`),
-                fetch(`${apiBase}/data/${zoneId}/setpoints`)
-            ]);
+    try {
+        console.log("API BASE:", apiBase);
 
-            if (!zRes.ok || !sRes.ok || !spRes.ok) throw new Error("Request failed");
+        const url1 = `${apiBase}/data`;
+        const url2 = `${apiBase}/data/${zoneId}/sm`;
+        const url3 = `${apiBase}/data/${zoneId}/setpoints`;
 
-            const zData = await zRes.json();
-            setZoneData(zData);
-            setSmData(await sRes.json());
-            setSetpointData(await spRes.json());
+        console.log("URL1:", url1);
+        console.log("URL2:", url2);
+        console.log("URL3:", url3);
 
-            if (zData.timestamp) {
-                const dt = new Date(zData.timestamp * 1000);
-                setLastUpdated(dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            }
-        } catch (err) {
-            setErrorMsg('Connection failed');
-        } finally {
-            setRefreshing(false);
-        }
-    }, []);
+        const [zRes, sRes, spRes] = await Promise.all([
+            fetch(url1),
+            fetch(url2),
+            fetch(url3)
+        ]);
+
+        console.log("zRes status:", zRes.status);
+
+        if (!zRes.ok || !sRes.ok || !spRes.ok)
+            throw new Error("Request failed");
+
+        const zData = await zRes.json();
+        setZoneData(zData);
+        setSmData(await sRes.json());
+        setSetpointData(await spRes.json());
+
+    } catch (err) {
+        console.log("FETCH ERROR:", err);
+        setErrorMsg("Connection failed");
+    }
+}, [apiBase, zoneId]);
+
 
     useEffect(() => {
         fetchData();
