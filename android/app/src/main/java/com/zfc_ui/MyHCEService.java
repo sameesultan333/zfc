@@ -1,3 +1,4 @@
+/*
 package com.zfc_ui;
 
 import android.nfc.cardemulation.HostApduService;
@@ -20,7 +21,7 @@ public class MyHCEService extends HostApduService {
 
             Log.d(TAG, "AID Selected");
 
-            String payload = "zoneId=1;ssid=Denvik_JIO2_4_5G_EXT;password=denvik@345;apiBase=http://192.168.1.50:3090";
+            String payload = "zoneId=1;ssid=Denvik_JIO2_4_5G_EXT;password=denvik@345;apiBase=http://192.168.1.116:3090";
             byte[] data = payload.getBytes();
 
             byte[] response = new byte[data.length + 2];
@@ -41,3 +42,4 @@ public class MyHCEService extends HostApduService {
         Log.d(TAG, "Deactivated: " + reason);
     }
 }
+*/
